@@ -7,13 +7,13 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.11.1
 #   kernelspec:
-#     display_name: base
+#     display_name: Python 3
 #     language: python
-#     name: base
+#     name: python3
 # ---
 
 # +
-from DEA import DEAProblem
+# %run 'carbon alloca_ZSG DEA.py'
 from pandas import ExcelWriter
 
 import numpy as np
@@ -23,10 +23,10 @@ import pickle
 import pulp
 
 
-# %load_ext nb_black
+# # %load_ext nb_black
 
 # +
-file_lstm = r"Data_lstm.pickle"
+file_lstm = r"Data/Data_lstm.pickle"
 
 
 def read_dataframe(path, file_lstm=file_lstm):
@@ -42,7 +42,7 @@ def read_dataframe(path, file_lstm=file_lstm):
         path: file path
         file_lstm: name of the pickle file, default is (file_lstm = r"Data_lstm.pickle")
     """
-    os.chdir(path)
+    # os.chdir(path)
     with open(file_lstm, "rb") as file:
         data_df = pickle.load(file)
     return data_df
@@ -83,11 +83,11 @@ def calc_eff(year, data, weight, disp="weak disposability"):
     return results
 
 
-path = r"D:\tencent files\chrome Download\Research\DEA\DEA_carbon market\Data"
+path = r"Data"
 
 
 def read_zsg_data(year, path=path):
-    os.chdir(os.path.join(path, "DEA_results"))
+    path = os.path.join(path, "DEA_results")
     file_name_list = os.listdir()
     file = [file for file in file_name_list if str(year) in file][0]
     with open(file, "rb") as zsg_data:
@@ -212,7 +212,7 @@ def yearly_econ_benefit(year, path=path):
 
 def export_excel(year_range, path=path):
 
-    os.chdir(path)
+    # os.chdir(path)
     with ExcelWriter("economic_impct.xlsx") as writer:
         for year in year_range:
             eco_ben_df = yearly_econ_benefit(year, path=path)

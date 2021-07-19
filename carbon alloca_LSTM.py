@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -7,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.11.1
 #   kernelspec:
-#     display_name: base
+#     display_name: Python 3
 #     language: python
-#     name: base
+#     name: python3
 # ---
 
 # +
@@ -27,20 +28,26 @@ import numpy as np
 import os
 import pandas as pd
 import pickle
-
-# %load_ext nb_black
 # -
 
 # ## Load Dataset 
 
-# +
-data_path = r"D:\tencent files\chrome Download\Research\DEA\DEA_carbon market\Data\Data.xlsx"  # set file path
+data_path = r"Data/Data.xlsx"  # set file path
 
-data = pd.read_excel(data_path, sheet_name="DEA_data").set_index(
-    ["City name", "year", "region"]
-)  # read file, set province name as index
-data.head()
-# -
+data = (
+    pd.read_excel(
+        data_path,
+        sheet_name="DEA_data",
+    )
+    .set_index(["City name", "year", "region"])
+    .loc[:, ["Population", "Fixed asset", "Energy consumption", "GDP", "CO2 emisson"]]
+)
+
+data.index.get_level_values('year').to_frame().describe()
+
+# !tree .
+
+pd.read_excel('Data/Data_lstm.xlsx')
 
 # ## Data normalization 
 
@@ -156,6 +163,7 @@ def mean_absolute_percentage_error(y_true, y_pred):
     #    y_true, y_pred = _check_1d_array(y_true, y_pred)
 
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+# 定义损失函数
 
 
 def model_train(
@@ -223,13 +231,17 @@ def model_train(
     mape = mean_absolute_percentage_error(inv_y, inv_yhat)
 
     # save model
-    path = r"E:\desktop\PythonScipt\keras_models\ZSG_DEA"
+    path = "model/SG_DEA"
     os.chdir(path)
     if (province_list[i] + "_lstm.h5") not in os.listdir(path):
         model.save(province_list[i] + "_lstm.h5")
 
     return rmse, mape, yhat
 
+
+# +
+# # %mkdir model/
+# -
 
 length = len(province_list)
 dropout = 0

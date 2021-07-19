@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.11.1
 #   kernelspec:
-#     display_name: base
+#     display_name: Python 3
 #     language: python
-#     name: base
+#     name: python3
 # ---
 
 # +
@@ -20,7 +20,7 @@ import pandas as pd
 import pickle
 import pulp
 
-# %load_ext nb_black
+# # %load_ext nb_black
 # -
 
 class ZSG_DEAProblem:
@@ -213,8 +213,8 @@ class ZSG_DEAProblem:
         return results
 
 
-def read_dataframe(path, file_lstm=r"Data_lstm.pickle"):
-    os.chdir(path)
+def read_dataframe(path, file_lstm=r"Data/Data_lstm.pickle"):
+    # os.chdir(path)
     with open(file_lstm, "rb") as file:
         data_df = pickle.load(file)
     return data_df
@@ -226,7 +226,7 @@ def read_data(data, column_name, year):
     return data_col_year
 
 
-path = r"D:\tencent files\chrome Download\Research\DEA\DEA_carbon market\Data"
+path = r"Data"
 
 column_in = ["Population", "Fixed asset", "Energy consumption"]
 column_out = ["GDP"]
@@ -255,11 +255,11 @@ calc_eff(2017, data)
 def pickle_file(year, data, original_path=path):
     results = calc_eff(year, data)
     os.chdir(original_path)
-    if not os.path.exists("DEA_results"):
-        os.mkdir("DEA_results")
-    os.chdir("DEA_results")
+    if not os.path.exists("Data/DEA_results"):
+        os.mkdir("Data/DEA_results")
+    # os.chdir("DEA_results")
     with open(str(year) + ".pickle", "wb") as file_name:
-        pickle.dump(results, file_name)
+        pickle.dump(results, os.path.join(original_path,file_name))
 
 
 years = range(2000, 2031)
@@ -270,5 +270,6 @@ def main():
     for year in years:
         pickle_file(year, data)
 
-
-main()
+# +
+# main()
+# 已经存在。
